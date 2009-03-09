@@ -11,4 +11,4 @@ $ /path/to/appengine_sdk/dev_appserver.py /path/to/amaurot/app/
 * Edit /path/to/amaurot/app.yaml 
 ** Change line "application: workstack" to "application: YOUR_PROJECT_NAME"
 * Deploy amaurot to your project
-$ ./appcfg.py update /home/brandon/projects/amaurot/app/
+$ ./appcfg.py update /path/to/amaurot/app/
