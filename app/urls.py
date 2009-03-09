@@ -7,6 +7,7 @@ import views
 
 urlpatterns = patterns('',
     (r'^$', views.index),
+    (r'^command$', views.command),
 
     # Example:
     # (r'^app/', include('app.foo.urls')),
