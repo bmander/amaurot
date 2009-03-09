@@ -3,6 +3,7 @@
     <h1>Workstack</h1>
     Logged in as {{user.email}}. <a href="{{logout_url}}">logout</a>
     <form method=POST action="command"><input type="text" size="100" name="command"><input type="submit" value="post"></form>
+    Current task: {{ account.task.title }}<br>
     {% for command in commands %}
     <a href="task/{{command.task.uuid}}">+</a> {{command.created|date:"Y/m/d H:i:s"}} <span style="background-color:#FFFFAA">{{command.root}}</span> {{command.args}}<br>
     {% endfor %}

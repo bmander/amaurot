@@ -28,19 +28,22 @@ def index(request):
     commands = Command.all().order('-created')
     account = get_or_init_account( user )
     
-    return render_to_response( "index.html", {'commands':commands, 'user':user, 'logout_url':logout_url} )
+    return render_to_response( "index.html", {'account':account, 'commands':commands, 'user':user, 'logout_url':logout_url} )
     
 def task(request, uuid):
     task = Task.all().filter("uuid =",uuid)[0]
     
     return render_to_response( "task.html", {'task':task} )
 
-def push(command_args):
+def push(command_args, account):
     title = command_args
     
     task = Task(title=title,
                 uuid=uuid.uuid1().hex)
     task.put()
+    
+    account.task = task
+    account.put()
     
     command = Command(created=datetime.datetime.now(),
                       root="PUSH",
@@ -55,7 +58,9 @@ def command(request):
     command_root = command_content.split()[0].upper()
     command_args = command_content[len(command_root):].strip()
     
+    account = get_or_init_account( users.get_current_user() )
+    
     if command_root in commands:
-        commands[command_root](command_args)
+        commands[command_root](command_args, account)
     
     return HttpResponseRedirect("/")
