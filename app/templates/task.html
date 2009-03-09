@@ -2,10 +2,11 @@
   <body>
     <h1>Task {{task.uuid}}</h1>
     Title: {{task.title}}<br>
+    Status: {{task.status}}<br>
     Blocks: <a href="/task/{{task.blocks.uuid}}">{{task.blocks.title}}</a><br>
     Blocked by:<br>
     {% for subtask in subtasks %}
-    <a href="/task/{{subtask.uuid}}">{{ subtask.title }}</a><br>
+    <a href="/task/{{subtask.uuid}}">{{ subtask.title }} - {{ subtask.status }}</a><br>
     {% endfor %}
   </body>
 </html>

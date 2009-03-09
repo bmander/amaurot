@@ -4,6 +4,7 @@ from models import Task, Command, Account
 import datetime
 import uuid
 from google.appengine.api import users
+from google.appengine.ext import db
 
 def get_or_init_account(user):
     account = Account.all().filter('user =', user).get()
@@ -42,7 +43,8 @@ def push(command_args, account):
     task = Task(proposer=account.user,
                 proposed=datetime.datetime.now(),
                 title=title,
-                uuid=uuid.uuid1().hex)
+                uuid=uuid.uuid1().hex,
+                status=db.Category("underway"))
     task.blocks = account.task
     task.put()
 
@@ -58,6 +60,9 @@ def push(command_args, account):
     
 def pop(command_args, account):
     tobepopped = account.task
+    tobepopped.status = db.Category("finished")
+    tobepopped.put()
+    
     account.task = account.task.blocks
     account.put()
     
@@ -74,7 +79,8 @@ def todo(command_args, account):
     task = Task(proposer=account.user,
                 proposed=datetime.datetime.now(),
                 title=title,
-                uuid=uuid.uuid1().hex)
+                uuid=uuid.uuid1().hex,
+                status=db.Category("todo"))
     task.blocks = account.task
     task.put()
     

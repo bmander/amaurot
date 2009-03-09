@@ -6,6 +6,7 @@ class Task(db.Model):
     uuid = db.StringProperty()
     title = db.StringProperty()
     blocks = db.SelfReferenceProperty()
+    status = db.CategoryProperty()
     
 class Command(db.Model):
     user    = db.UserProperty()
