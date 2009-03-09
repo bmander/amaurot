@@ -5,6 +5,7 @@ class Task(db.Model):
     started = db.DateTimeProperty()
     uuid = db.StringProperty()
     title = db.StringProperty()
+    blocks = db.SelfReferenceProperty()
     
 class Command(db.Model):
     created = db.DateTimeProperty()

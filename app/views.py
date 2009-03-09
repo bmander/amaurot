@@ -40,8 +40,9 @@ def push(command_args, account):
     
     task = Task(title=title,
                 uuid=uuid.uuid1().hex)
+    task.blocks = account.task
     task.put()
-    
+
     account.task = task
     account.put()
     
