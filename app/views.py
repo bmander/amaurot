@@ -51,8 +51,20 @@ def push(command_args, account):
                       args=command_args,
                       task=task)
     command.put()
+    
+def pop(command_args, account):
+    tobepopped = account.task
+    account.task = account.task.blocks
+    account.put()
+    
+    command = Command(created=datetime.datetime.now(),
+                      root="POP",
+                      args=command_args,
+                      task=tobepopped)
+    command.put()
 
-commands = {'PUSH': push}
+commands = {'PUSH': push,
+            'POP': pop}
 
 def command(request):
     command_content = request.POST['command']
