@@ -2,5 +2,8 @@
   <body>
     <h1>Workstack</h1>
     <form method=POST action="command"><input type="text" size="100" name="command"><input type="submit" value="post"></form>
+    {% for task in tasks %}
+    {{task.title}}<br>
+    {% endfor %}
   </body>
 </html>
