@@ -7,8 +7,8 @@ def index(request):
     
     return render_to_response( "index.html", {'tasks':tasks} )
 
-def new_task(argv):
-    title = " ".join(argv[1:])
+def new_task(command_args):
+    title = command_args
     
     task = Task(title=title)
     task.put()
@@ -16,9 +16,11 @@ def new_task(argv):
 commands = {'PUSH': new_task}
 
 def command(request):
-    argv = request.POST['command'].split()
+    command_content = request.POST['command']
+    command_root = command_content.split()[0].upper()
+    command_args = command_content[len(command_root):].strip()
     
-    if argv[0].upper() in commands:
-        commands[argv[0].upper()](argv)
+    if command_root in commands:
+        commands[command_root](command_args)
     
     return HttpResponseRedirect("/")
