@@ -91,10 +91,24 @@ def todo(command_args, account):
                       task=task)
     command.put()
     
+def switch(command_args, account):
+    uuid = command_args.strip()
+    task = Task.all().filter("uuid =", uuid)[0]
+    account.task = task
+    account.put()
+    
+    command = Command(user=account.user,
+                      created=datetime.datetime.now(),
+                      root="SWITCH",
+                      args=command_args,
+                      task=task)
+    command.put()
+    
 
 commands = {'PUSH': push,
             'POP': pop,
-            'TODO': todo}
+            'TODO': todo,
+            'SWITCH': switch,}
 
 def command(request):
     command_content = request.POST['command']
