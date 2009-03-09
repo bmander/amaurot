@@ -25,7 +25,7 @@ def index(request):
     
     logout_url = users.create_logout_url("/")
     
-    commands = Command.all().order('-created')
+    commands = Command.all().filter("user =", user).order('-created')
     account = get_or_init_account( user )
     
     return render_to_response( "index.html", {'account':account, 'commands':commands, 'user':user, 'logout_url':logout_url} )
@@ -38,7 +38,10 @@ def task(request, uuid):
 def push(command_args, account):
     title = command_args
     
-    task = Task(title=title,
+    task = Task(proposer=account.user,
+                proposed=datetime.datetime.now(),
+                started=datetime.datetime.now(),
+                title=title,
                 uuid=uuid.uuid1().hex)
     task.blocks = account.task
     task.put()
@@ -46,7 +49,8 @@ def push(command_args, account):
     account.task = task
     account.put()
     
-    command = Command(created=datetime.datetime.now(),
+    command = Command(user=account.user,
+                      created=datetime.datetime.now(),
                       root="PUSH",
                       args=command_args,
                       task=task)
@@ -57,7 +61,8 @@ def pop(command_args, account):
     account.task = account.task.blocks
     account.put()
     
-    command = Command(created=datetime.datetime.now(),
+    command = Command(user=account.user,
+                      created=datetime.datetime.now(),
                       root="POP",
                       args=command_args,
                       task=tobepopped)
