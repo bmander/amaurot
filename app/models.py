@@ -3,8 +3,6 @@ from google.appengine.ext import db
 class Task(db.Model):
     proposer = db.UserProperty()
     proposed = db.DateTimeProperty()
-    started = db.DateTimeProperty()
-    completed = db.DateTimeProperty()
     uuid = db.StringProperty()
     title = db.StringProperty()
     blocks = db.SelfReferenceProperty()

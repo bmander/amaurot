@@ -41,7 +41,6 @@ def push(command_args, account):
     
     task = Task(proposer=account.user,
                 proposed=datetime.datetime.now(),
-                started=datetime.datetime.now(),
                 title=title,
                 uuid=uuid.uuid1().hex)
     task.blocks = account.task
