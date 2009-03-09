@@ -1,19 +1,26 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
-from models import Task
+from models import Task, Command
+import datetime
 
 def index(request):
-    tasks = Task.all()
+    commands = Command.all().order('-created')
     
-    return render_to_response( "index.html", {'tasks':tasks} )
+    return render_to_response( "index.html", {'commands':commands} )
 
-def new_task(command_args):
+def push(command_args):
     title = command_args
     
     task = Task(title=title)
     task.put()
+    
+    command = Command(created=datetime.datetime.now(),
+                      root="PUSH",
+                      args=command_args,
+                      task=task)
+    command.put()
 
-commands = {'PUSH': new_task}
+commands = {'PUSH': push}
 
 def command(request):
     command_content = request.POST['command']
