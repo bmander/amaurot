@@ -1,1 +1,14 @@
 Amaurot is a universal project management and task dispatch system.
+
+== RUN USING APP ENGINE DEV WEBSERVER ==
+
+$ /path/to/appengine_sdk/dev_appserver.py /path/to/amaurot/app/
+
+== DEPLOY AMAUROT TO APP ENGINE ==
+
+* Create app engine account
+* Create app engine project
+* Edit /path/to/amaurot/app.yaml 
+** Change line "application: workstack" to "application: YOUR_PROJECT_NAME"
+* Deploy amaurot to your project
+$ ./appcfg.py update /home/brandon/projects/amaurot/app/
