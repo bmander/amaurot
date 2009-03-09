@@ -32,8 +32,9 @@ def index(request):
     
 def task(request, uuid):
     task = Task.all().filter("uuid =",uuid)[0]
+    subtasks = Task.all().filter("blocks =",task)
     
-    return render_to_response( "task.html", {'task':task} )
+    return render_to_response( "task.html", {'task':task,'subtasks':subtasks} )
 
 def push(command_args, account):
     title = command_args
@@ -67,9 +68,28 @@ def pop(command_args, account):
                       args=command_args,
                       task=tobepopped)
     command.put()
+    
+def todo(command_args, account):
+    title = command_args
+    
+    task = Task(proposer=account.user,
+                proposed=datetime.datetime.now(),
+                title=title,
+                uuid=uuid.uuid1().hex)
+    task.blocks = account.task
+    task.put()
+    
+    command = Command(user=account.user,
+                      created=datetime.datetime.now(),
+                      root="TODO",
+                      args=command_args,
+                      task=task)
+    command.put()
+    
 
 commands = {'PUSH': push,
-            'POP': pop}
+            'POP': pop,
+            'TODO': todo}
 
 def command(request):
     command_content = request.POST['command']

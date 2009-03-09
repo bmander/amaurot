@@ -3,5 +3,9 @@
     <h1>Task {{task.uuid}}</h1>
     Title: {{task.title}}<br>
     Blocks: <a href="/task/{{task.blocks.uuid}}">{{task.blocks.title}}</a><br>
+    Blocked by:<br>
+    {% for subtask in subtasks %}
+    <a href="/task/{{subtask.uuid}}">{{ subtask.title }}</a><br>
+    {% endfor %}
   </body>
 </html>
