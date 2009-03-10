@@ -1,6 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
-from models import Task, Command, Account
+from models import Task, Command, Account, Comment
 import datetime
 import uuid
 from google.appengine.api import users
@@ -34,8 +34,9 @@ def index(request):
 def task(request, uuid):
     task = Task.all().filter("uuid =",uuid)[0]
     subtasks = Task.all().filter("blocks =",task)
+    comments = Comment.all().filter("task =",task).order("-created")
     
-    return render_to_response( "task.html", {'task':task,'subtasks':subtasks} )
+    return render_to_response( "task.html", {'task':task,'subtasks':subtasks,'comments':comments} )
 
 def push(command_args, account):
     title = command_args
@@ -92,8 +93,12 @@ def todo(command_args, account):
     command.put()
     
 def switch(command_args, account):
+    toblock = account.task
+    task.status = db.Category("blocked")
+    
     uuid = command_args.strip()
     task = Task.all().filter("uuid =", uuid)[0]
+    task.status = db.Category("underway")
     account.task = task
     account.put()
     
@@ -104,11 +109,25 @@ def switch(command_args, account):
                       task=task)
     command.put()
     
-
+def comment(command_args, account):    
+    cc = Comment(body = command_args,
+                 task = account.task,
+                 created = datetime.datetime.now())
+    cc.put()
+    
+    command = Command(user=account.user,
+                      created=datetime.datetime.now(),
+                      root="COMMENT",
+                      args=command_args,
+                      task=account.task)
+                      
+    command.put()
+    
 commands = {'PUSH': push,
             'POP': pop,
             'TODO': todo,
-            'SWITCH': switch,}
+            'SWITCH': switch,
+            'COMMENT': comment,}
 
 def command(request):
     command_content = request.POST['command']
@@ -119,5 +138,7 @@ def command(request):
     
     if command_root in commands:
         commands[command_root](command_args, account)
+    else:
+        comment( command_content, account )
     
     return HttpResponseRedirect("/")

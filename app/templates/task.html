@@ -8,5 +8,9 @@
     {% for subtask in subtasks %}
     <a href="/task/{{subtask.uuid}}">{{ subtask.title }} - {{ subtask.status }}</a><br>
     {% endfor %}
+    Comments:<br>
+    {% for comment in comments %}
+    {{comment.created}} - {{comment.body}}<br>
+    {% endfor %}
   </body>
 </html>

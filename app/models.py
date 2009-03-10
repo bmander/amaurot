@@ -18,3 +18,8 @@ class Command(db.Model):
 class Account(db.Model):
     user = db.UserProperty()
     task = db.ReferenceProperty(Task)
+    
+class Comment(db.Model):
+    created = db.DateTimeProperty()
+    task = db.ReferenceProperty(Task)
+    body = db.StringProperty()
