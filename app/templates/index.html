@@ -1,7 +1,17 @@
 <html>
   <body>
     <h1>Workstack</h1>
-    Logged in as {{user.email}}. <a href="{{logout_url}}">logout</a>
+    Logged in as {{user.email}}. <a href="{{logout_url}}">logout</a><br>
+    <h3>Commands</h3>
+    <table>
+    <tr><td><span style="background-color:#FFFFAA">PUSH</span> task_title</td><td>Create and move down to subtask</td></tr>
+    <tr><td><span style="background-color:#FFFFAA">POP</span></td><td>Finish task and move up to parent</td></tr>
+    <tr><td><span style="background-color:#FFFFAA">UP</span></td><td>Move up to parent without finishing current task</td></tr>
+    <tr><td><span style="background-color:#FFFFAA">TODO</span> task_title</td><td>Create subtask, but do not move to it</td></tr>
+    <tr><td><span style="background-color:#FFFFAA">COMMENT</span> comment</td><td>Log comment for current task</td></tr>
+    <tr><td><span style="background-color:#FFFFAA">SWITCH</span> uuid</td><td>Switch current task to task with uuid</td></tr>
+    </table>
+    <br>
     <form method=POST action="command"><input type="text" size="100" name="command"><input type="submit" value="post"></form>
     <h3>Current Task</h3>
     <a href="task/{{account.task.uuid}}">{{ account.task.title }}</a>
