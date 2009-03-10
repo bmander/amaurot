@@ -10,6 +10,7 @@
     <tr><td><span style="background-color:#FFFFAA">TODO</span> task_title</td><td>Create subtask, but do not move to it</td></tr>
     <tr><td><span style="background-color:#FFFFAA">COMMENT</span> comment</td><td>Log comment for current task</td></tr>
     <tr><td><span style="background-color:#FFFFAA">SWITCH</span> uuid</td><td>Switch current task to task with uuid</td></tr>
+    <tr><td><span style="background-color:#FFFFAA">PURPOSE</span> parent_uuid [child_uuid]</td><td>Set purpose of child_uuid to parent_uuid. If no child_uuid given, sets purpose of current task.</td></tr>
     </table>
     <br>
     <form method=POST action="command"><input type="text" size="100" name="command"><input type="submit" value="post"></form>

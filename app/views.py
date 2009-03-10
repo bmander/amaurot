@@ -138,12 +138,38 @@ def up(command_args, account):
                       task=toblock)
     command.put()
     
+def purpose(command_args, account):
+    if not account.task:
+        return
+    
+    uuids = command_args.strip().split()
+    
+    child_uuid = uuids[0]
+    task_purpose = Task.all().filter("uuid =", child_uuid)[0]
+    
+    if len(uuids)==2:
+        parent_uuid = uuids[1]
+        task = Task.all().filter("uuid =", parent_uuid)[0]
+    else:
+        task = account.task
+        
+    task.blocks = task_purpose
+    task.put()
+        
+    command = Command(user=account.user,
+                      created=datetime.datetime.now(),
+                      root="PURPOSE",
+                      args=command_args,
+                      task=task)
+    command.put()
+    
 commands = {'PUSH': push,
             'POP': pop,
             'TODO': todo,
             'SWITCH': switch,
             'COMMENT': comment,
-            'UP':up,}
+            'UP':up,
+            'PURPOSE':purpose,}
 
 def command(request):
     command_content = request.POST['command']
