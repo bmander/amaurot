@@ -122,11 +122,28 @@ def comment(command_args, account):
                       
     command.put()
     
+def block(command_args, account):
+    if not account.task:
+        return
+        
+    toblock = account.task
+    
+    account.task = account.task.blocks
+    account.put()
+    
+    command = Command(user=account.user,
+                      created=datetime.datetime.now(),
+                      root="BLOCK",
+                      args=command_args,
+                      task=toblock)
+    command.put()
+    
 commands = {'PUSH': push,
             'POP': pop,
             'TODO': todo,
             'SWITCH': switch,
-            'COMMENT': comment,}
+            'COMMENT': comment,
+            'BLOCK':block,}
 
 def command(request):
     command_content = request.POST['command']

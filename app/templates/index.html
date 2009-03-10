@@ -5,6 +5,10 @@
     <form method=POST action="command"><input type="text" size="100" name="command"><input type="submit" value="post"></form>
     <h3>Current Task</h3>
     <a href="task/{{account.task.uuid}}">{{ account.task.title }}</a>
+    <h3>Todo</h3>
+    {% for todo in todos %}
+    <a href="task/{{todo.uuid}}">{{todo.title }}</a> [switch to {{todo.uuid}}]<br>
+    {% endfor %}
     <h3>Log</h3>
     {% for command in commands %}
     <a href="task/{{command.task.uuid}}">{{command.task.uuid|slice:":7"}}...{{command.task.uuid|slice:"-7:"}}</a> {{command.created|date:"Y/m/d H:i:s"}} <span style="background-color:#FFFFAA">{{command.root}}</span> {{command.args}}<br>
