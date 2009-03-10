@@ -122,7 +122,7 @@ def comment(command_args, account):
                       
     command.put()
     
-def block(command_args, account):
+def up(command_args, account):
     if not account.task:
         return
         
@@ -133,7 +133,7 @@ def block(command_args, account):
     
     command = Command(user=account.user,
                       created=datetime.datetime.now(),
-                      root="BLOCK",
+                      root="UP",
                       args=command_args,
                       task=toblock)
     command.put()
@@ -143,7 +143,7 @@ commands = {'PUSH': push,
             'TODO': todo,
             'SWITCH': switch,
             'COMMENT': comment,
-            'BLOCK':block,}
+            'UP':up,}
 
 def command(request):
     command_content = request.POST['command']
