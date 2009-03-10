@@ -93,8 +93,6 @@ def todo(command_args, account):
     command.put()
     
 def switch(command_args, account):
-    toblock = account.task
-    task.status = db.Category("blocked")
     
     uuid = command_args.strip()
     task = Task.all().filter("uuid =", uuid)[0]
