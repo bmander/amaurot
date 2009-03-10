@@ -1,14 +1,14 @@
 <html>
   <body>
-    <h1>Task {{task.uuid}}</h1>
-    Title: {{task.title}}<br>
-    Status: {{task.status}}<br>
-    Blocks: <a href="/task/{{task.blocks.uuid}}">{{task.blocks.title}}</a><br>
-    Blocked by:<br>
+    <h1>Task: {{task.title}}</h1>
+    UUID: {{task.uuid}}<br>
+    Status: {{task.status}}
+    <h3>Blocks</h3> <a href="/task/{{task.blocks.uuid}}">{{task.blocks.title}}</a><br>
+    <h3>Blocked by</h3>
     {% for subtask in subtasks %}
     <a href="/task/{{subtask.uuid}}">{{ subtask.title }} - {{ subtask.status }}</a><br>
     {% endfor %}
-    Comments:<br>
+    <h3>Comments</h3>
     {% for comment in comments %}
     {{comment.created}} - {{comment.body}}<br>
     {% endfor %}
