@@ -28,8 +28,9 @@ def index(request):
     
     commands = Command.all().filter("user =", user).order('-created')
     account = get_or_init_account( user )
+    todos = Task.all().filter("blocks =",account.task).filter("status =",db.Category("todo"))
     
-    return render_to_response( "index.html", {'account':account, 'commands':commands, 'user':user, 'logout_url':logout_url} )
+    return render_to_response( "index.html", {'account':account, 'commands':commands, 'user':user, 'logout_url':logout_url,'todos':todos} )
     
 def task(request, uuid):
     task = Task.all().filter("uuid =",uuid)[0]
