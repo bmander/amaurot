@@ -15,6 +15,11 @@ def get_or_init_account(user):
     return account
 
 def index(request):
+    if 'offset' in request.GET:
+        offset = int(request.GET['offset'])
+    else:
+        offset = 0
+    
     # use Users API to get current user
     user = users.get_current_user()
     
@@ -26,7 +31,7 @@ def index(request):
     
     logout_url = users.create_logout_url("/")
     
-    commands = Command.all().filter("user =", user).order('-created').fetch(50)
+    commands = Command.all().filter("user =", user).order('-created').fetch(50,offset=offset)
     account = get_or_init_account( user )
     todos = Task.all().filter("blocks =",account.task).filter("status =",db.Category("todo"))
     
@@ -36,7 +41,9 @@ def index(request):
         stack.append( tt )
         tt = tt.parent()
     
-    return render_to_response( "index.html", {'account':account, 'commands':commands, 'user':user, 'logout_url':logout_url,'todos':todos,'stack':stack} )
+
+    
+    return render_to_response( "index.html", {'account':account, 'commands':commands, 'user':user, 'logout_url':logout_url,'todos':todos,'stack':stack,'offset':offset+50} )
     
 def task(request, uuid):
     task = Task.all().filter("uuid =",uuid)[0]

@@ -26,5 +26,6 @@
     {% for command in commands %}
     <pre style="margin:0px"><a href="task/{{command.task.uuid}}">{{command.task.uuid|slice:":7"}}...{{command.task.uuid|slice:"-7:"}}</a> {{command.created|date:"Y/m/d H:i:s"}} <span style="background-color:#FFFFAA">{{command.root}}</span> {{command.args}}</pre>
     {% endfor %}
+    <a href="/?offset={{offset}}">more</a>
   </body>
 </html>
