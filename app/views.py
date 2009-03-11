@@ -30,7 +30,13 @@ def index(request):
     account = get_or_init_account( user )
     todos = Task.all().filter("blocks =",account.task).filter("status =",db.Category("todo"))
     
-    return render_to_response( "index.html", {'account':account, 'commands':commands, 'user':user, 'logout_url':logout_url,'todos':todos} )
+    stack = []
+    tt = account.task
+    while tt is not None:
+        stack.append( tt )
+        tt = tt.parent()
+    
+    return render_to_response( "index.html", {'account':account, 'commands':commands, 'user':user, 'logout_url':logout_url,'todos':todos,'stack':stack} )
     
 def task(request, uuid):
     task = Task.all().filter("uuid =",uuid)[0]
@@ -46,8 +52,9 @@ def push(command_args, account):
                 proposed=datetime.datetime.now(),
                 title=title,
                 uuid=uuid.uuid1().hex,
-                status=db.Category("underway"))
-    task.blocks = account.task
+                status=db.Category("underway"),
+                blocks = account.task,
+                parent = account.task)
     task.put()
 
     account.task = task
@@ -82,8 +89,9 @@ def todo(command_args, account):
                 proposed=datetime.datetime.now(),
                 title=title,
                 uuid=uuid.uuid1().hex,
-                status=db.Category("todo"))
-    task.blocks = account.task
+                status=db.Category("todo"),
+                blocks = account.task,
+                parent = account.task)
     task.put()
     
     command = Command(user=account.user,

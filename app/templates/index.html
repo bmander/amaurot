@@ -15,7 +15,10 @@
     <br>
     <form method=POST action="command"><input type="text" size="100" name="command"><input type="submit" value="post"></form>
     <h3>Current Task</h3>
-    <a href="task/{{account.task.uuid}}">{{ account.task.title }}</a>
+    {% for task in stack %}
+    <a href="task/{{task.uuid}}">{{ task.title }}<br></a>
+    {% endfor %}
+    
     <h3>Todo</h3>
     {% for todo in todos %}
     <a href="task/{{todo.uuid}}">{{todo.title }}</a> [switch to {{todo.uuid}}]<br>
