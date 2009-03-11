@@ -48,13 +48,19 @@ def task(request, uuid):
 def push(command_args, account):
     title = command_args
     
+    if account.task is None:
+        level = 0
+    else:
+        level = account.task.level+1
+    
     task = Task(proposer=account.user,
                 proposed=datetime.datetime.now(),
                 title=title,
                 uuid=uuid.uuid1().hex,
                 status=db.Category("underway"),
                 blocks = account.task,
-                parent = account.task)
+                parent = account.task,
+                level = level)
     task.put()
 
     account.task = task
@@ -85,13 +91,19 @@ def pop(command_args, account):
 def todo(command_args, account):
     title = command_args
     
+    if account.task is None:
+        level = 0
+    else:
+        level = account.task.level+1
+    
     task = Task(proposer=account.user,
                 proposed=datetime.datetime.now(),
                 title=title,
                 uuid=uuid.uuid1().hex,
                 status=db.Category("todo"),
                 blocks = account.task,
-                parent = account.task)
+                parent = account.task,
+                level=level)
     task.put()
     
     command = Command(user=account.user,
