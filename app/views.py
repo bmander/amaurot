@@ -26,7 +26,7 @@ def index(request):
     
     logout_url = users.create_logout_url("/")
     
-    commands = Command.all().filter("user =", user).order('-created')
+    commands = Command.all().filter("user =", user).order('-created').fetch(50)
     account = get_or_init_account( user )
     todos = Task.all().filter("blocks =",account.task).filter("status =",db.Category("todo"))
     
