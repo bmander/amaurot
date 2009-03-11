@@ -199,7 +199,7 @@ commands = {'PUSH': push,
             'PURPOSE':purpose,}
 
 def command(request):
-    command_content = request.POST['command']
+    command_content = request.POST['command'] if 'command' in request.POST else request.GET['command']
     command_root = command_content.split()[0].upper()
     command_args = command_content[len(command_root):].strip()
     

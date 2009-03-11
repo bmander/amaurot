@@ -16,7 +16,7 @@
     <form method=POST action="command"><input type="text" size="100" name="command"><input type="submit" value="post"></form>
     <h3>Current Task</h3>
     {% for todo in todos %}
-    <pre style="background-color:#FFFFAA;margin-left:{{stack|length}}em;margin-top:0px;margin-bottom:0px;"><a href="task/{{todo.uuid}}">{{todo.title }}</a> [switch to {{todo.uuid}}]</pre>
+    <pre style="background-color:#FFFFAA;margin-left:{{stack|length}}em;margin-top:0px;margin-bottom:0px;"><a href="task/{{todo.uuid}}">{{todo.title }}</a> [<a href="command?command=switch {{todo.uuid}}">switch</a>]</pre>
     {% endfor %}
     {% for task in stack %}
     <pre style="{% if forloop.first %}outline:black solid thin;{% endif %}background-color:#AAFFAA;margin-left:{{task.level}}em;margin-top:0px;margin-bottom:0px;"><a href="task/{{task.uuid}}">{{ task.title }}<br></a></pre>
