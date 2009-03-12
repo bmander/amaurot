@@ -40,7 +40,7 @@ def index(request):
     tt = account.task
     while tt is not None:
         stack.append( tt )
-        tt = tt.parent()
+        tt = tt.blocks
 
     return render_to_response( "index.html", {'account':account, 'commands':commands, 'user':user, 'logout_url':logout_url,'todos':todos,'stack':stack,'offset':offset+50,'slushtasks':slushtasks} )
     
@@ -65,7 +65,6 @@ def push(command_args, account):
                 uuid=uuid.uuid1().hex,
                 status=db.Category("underway"),
                 blocks = account.task,
-                parent = account.task,
                 level = level)
     task.put()
 
@@ -108,7 +107,6 @@ def todo(command_args, account):
                 uuid=uuid.uuid1().hex,
                 status=db.Category("todo"),
                 blocks = account.task,
-                parent = account.task,
                 level=level)
     task.put()
     
@@ -198,7 +196,6 @@ def slush(command_args, account):
                 uuid=uuid.uuid1().hex,
                 status=db.Category("todo"),
                 blocks = None,
-                parent = None,
                 level = 0)
     task.put()
     
