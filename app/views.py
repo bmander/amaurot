@@ -34,13 +34,16 @@ def index(request):
     commands = Command.all().filter("user =", user).order('-created').fetch(50,offset=offset)
     account = get_or_init_account( user )
     todos = Task.all().filter("blocks =",account.task).filter("status =",db.Category("todo"))
-    slushtasks = Task.all().filter("proposer =", user).filter("level =", 0).filter("status =",db.Category("todo"))
+    slushtasks = Task.all().filter("proposer =", user).filter("blocks =", None).filter("status =",db.Category("todo"))
     
     stack = []
     tt = account.task
     while tt is not None:
         stack.append( tt )
         tt = tt.blocks
+        
+    for i, task in enumerate(reversed(stack)):
+        task.level = i
 
     return render_to_response( "index.html", {'account':account, 'commands':commands, 'user':user, 'logout_url':logout_url,'todos':todos,'stack':stack,'offset':offset+50,'slushtasks':slushtasks} )
     
@@ -54,18 +57,12 @@ def task(request, uuid):
 def push(command_args, account):
     title = command_args
     
-    if account.task is None:
-        level = 0
-    else:
-        level = account.task.level+1
-    
     task = Task(proposer=account.user,
                 proposed=datetime.datetime.now(),
                 title=title,
                 uuid=uuid.uuid1().hex,
                 status=db.Category("underway"),
-                blocks = account.task,
-                level = level)
+                blocks = account.task)
     task.put()
 
     account.task = task
@@ -96,18 +93,12 @@ def pop(command_args, account):
 def todo(command_args, account):
     title = command_args
     
-    if account.task is None:
-        level = 0
-    else:
-        level = account.task.level+1
-    
     task = Task(proposer=account.user,
                 proposed=datetime.datetime.now(),
                 title=title,
                 uuid=uuid.uuid1().hex,
                 status=db.Category("todo"),
-                blocks = account.task,
-                level=level)
+                blocks = account.task)
     task.put()
     
     command = Command(user=account.user,
@@ -195,8 +186,7 @@ def slush(command_args, account):
                 title=title,
                 uuid=uuid.uuid1().hex,
                 status=db.Category("todo"),
-                blocks = None,
-                level = 0)
+                blocks = None)
     task.put()
     
     command = Command(user=account.user,

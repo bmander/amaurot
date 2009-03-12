@@ -7,7 +7,6 @@ class Task(db.Model):
     title = db.StringProperty()
     blocks = db.SelfReferenceProperty()
     status = db.CategoryProperty()
-    level = db.IntegerProperty()
     
 class Command(db.Model):
     user    = db.UserProperty()
