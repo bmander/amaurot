@@ -34,7 +34,7 @@ def index(request):
     commands = Command.all().filter("user =", user).order('-created').fetch(50,offset=offset)
     account = get_or_init_account( user )
     todos = Task.all().filter("blocks =",account.task).filter("status =",db.Category("todo"))
-    slushtasks = Task.all().filter("proposer =", user).filter("level =", 0)
+    slushtasks = Task.all().filter("proposer =", user).filter("level =", 0).filter("status =",db.Category("todo"))
     
     stack = []
     tt = account.task
