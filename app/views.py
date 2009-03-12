@@ -34,16 +34,15 @@ def index(request):
     commands = Command.all().filter("user =", user).order('-created').fetch(50,offset=offset)
     account = get_or_init_account( user )
     todos = Task.all().filter("blocks =",account.task).filter("status =",db.Category("todo"))
+    slushtasks = Task.all().filter("proposer =", user).filter("level =", 0)
     
     stack = []
     tt = account.task
     while tt is not None:
         stack.append( tt )
         tt = tt.parent()
-    
 
-    
-    return render_to_response( "index.html", {'account':account, 'commands':commands, 'user':user, 'logout_url':logout_url,'todos':todos,'stack':stack,'offset':offset+50} )
+    return render_to_response( "index.html", {'account':account, 'commands':commands, 'user':user, 'logout_url':logout_url,'todos':todos,'stack':stack,'offset':offset+50,'slushtasks':slushtasks} )
     
 def task(request, uuid):
     task = Task.all().filter("uuid =",uuid)[0]
@@ -190,13 +189,34 @@ def purpose(command_args, account):
                       task=task)
     command.put()
     
+def slush(command_args, account):
+    title = command_args
+    
+    task = Task(proposer=account.user,
+                proposed=datetime.datetime.now(),
+                title=title,
+                uuid=uuid.uuid1().hex,
+                status=db.Category("todo"),
+                blocks = None,
+                parent = None,
+                level = 0)
+    task.put()
+    
+    command = Command(user=account.user,
+                      created=datetime.datetime.now(),
+                      root="SLUSH",
+                      args=command_args,
+                      task=task)
+    command.put()
+    
 commands = {'PUSH': push,
             'POP': pop,
             'TODO': todo,
             'SWITCH': switch,
             'COMMENT': comment,
             'UP':up,
-            'PURPOSE':purpose,}
+            'PURPOSE':purpose,
+            'SLUSH':slush,}
 
 def command(request):
     command_content = request.POST['command'] if 'command' in request.POST else request.GET['command']

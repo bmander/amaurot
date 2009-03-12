@@ -1,5 +1,13 @@
 <html>
-  <body>
+  <head>
+    <script type="text/javascript" src="/static/javascript/jquery.js"></script>
+    <script type="text/javascript">
+      function focusInput() {
+        $('#commandline').focus()
+      }
+    </script>
+  </head>
+  <body onload="focusInput()">
     <h1>Workstack</h1>
     Logged in as {{user.email}}. <a href="{{logout_url}}">logout</a><br>
     <h3>Commands</h3>
@@ -11,9 +19,14 @@
     <tr><td><span style="background-color:#FFFFAA">COMMENT</span> comment</td><td>Log comment for current task</td></tr>
     <tr><td><span style="background-color:#FFFFAA">SWITCH</span> uuid</td><td>Switch current task to task with uuid</td></tr>
     <tr><td><span style="background-color:#FFFFAA">PURPOSE</span> parent_uuid [child_uuid]</td><td>Set purpose of child_uuid to parent_uuid. If no child_uuid given, sets purpose of current task.</td></tr>
+    <tr><td><span style="background-color:#FFFFAA">SLUSH</span> task_title</td><td>Creates new task outside of task tree</td></tr>
     </table>
     <br>
-    <form method=POST action="command"><input type="text" size="100" name="command"><input type="submit" value="post"></form>
+    <form method=POST action="command"><input id="commandline" type="text" size="100" name="command"><input type="submit" value="post"></form>
+    <h3>Slush</h3>
+    {% for slushtask in slushtasks %}
+    <pre style="margin:0px;"><a href="task/{{slushtask.uuid}}">{{ slushtask.title }}</a></pre>
+    {% endfor %}
     <h3>Current Task</h3>
     {% for todo in todos %}
     <pre style="background-color:#FFFFAA;margin-left:{{stack|length}}em;margin-top:0px;margin-bottom:0px;"><a href="task/{{todo.uuid}}">{{todo.title }}</a> [<a href="command?command=switch {{todo.uuid}}">switch</a>]</pre>
